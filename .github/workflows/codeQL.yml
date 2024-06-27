@@ -31,6 +31,24 @@ jobs:
         uses: github/codeql-action/init@v2
         with:
           languages: ${{ matrix.language }}
+          config-file: .github/codeql/codeql-config.yml
+
+       # Agrega pasos de construcción personalizados para otros lenguajes aquí.
+      # Por ejemplo, para Node.js (JavaScript):
+      - name: Build JavaScript
+        if: matrix.language == 'javascript'
+        run: npm install
+
+      # Para Python:
+      - name: Build Python
+        if: matrix.language == 'python'
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
 
       # Autobuild attempts to build any compiled languages (Java, C/C++, C#).
       # If this step fails, then you should remove it and run the build manually (see below)
