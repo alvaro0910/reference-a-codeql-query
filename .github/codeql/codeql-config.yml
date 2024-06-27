@@ -1,9 +1,7 @@
 packs:
   # Use these packs for JavaScript analysis
   javascript:
-    - scope/js-pack1
-    - scope/js-pack2
-  # Use these packs for Java analysis
-  java:
-    - scope/java-pack1
-    - scope/java-pack2@v1.0.0
+    - github/codeql/javascript-queries@v1
+  # Use these packs for Python analysis
+  python:
+    - github/codeql/python-queries@v1
