@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      # required for all workflows
       security-events: write
       actions: read
       contents: read
@@ -19,8 +18,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'javascript', 'python' ]
-        # Puedes añadir más lenguajes según sea necesario.
+        language: [ 'javascript', 'python', 'java' ]
+        # Añade más lenguajes según sea necesario.
         # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
 
     steps:
@@ -33,7 +32,17 @@ jobs:
           languages: ${{ matrix.language }}
           config-file: .github/codeql/codeql-config.yml
 
-       # Agrega pasos de construcción personalizados para otros lenguajes aquí.
+      # Construcción personalizada para Java con Maven
+      - name: Build with Maven
+        if: matrix.language == 'java'
+        run: mvn clean install
+
+      # Construcción personalizada para Java con Gradle
+      - name: Build with Gradle
+        if: matrix.language == 'java'
+        run: gradle build
+
+      # Agrega pasos de construcción personalizados para otros lenguajes aquí.
       # Por ejemplo, para Node.js (JavaScript):
       - name: Build JavaScript
         if: matrix.language == 'javascript'
@@ -49,13 +58,4 @@ jobs:
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
-
-      # Autobuild attempts to build any compiled languages (Java, C/C++, C#).
-      # If this step fails, then you should remove it and run the build manually (see below)
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v2
-
-      # Uncomment the following lines to manually build your code if Autobuild fails
-      # - run: |
-      #   ./configure
       #   make
