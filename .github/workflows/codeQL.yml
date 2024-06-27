@@ -32,16 +32,6 @@ jobs:
           languages: ${{ matrix.language }}
           config-file: .github/codeql/codeql-config.yml
 
-      # Construcción personalizada para Java con Maven
-      - name: Build with Maven
-        if: matrix.language == 'java'
-        run: mvn clean install
-
-      # Construcción personalizada para Java con Gradle
-      - name: Build with Gradle
-        if: matrix.language == 'java'
-        run: gradle build
-
       # Agrega pasos de construcción personalizados para otros lenguajes aquí.
       # Por ejemplo, para Node.js (JavaScript):
       - name: Build JavaScript
