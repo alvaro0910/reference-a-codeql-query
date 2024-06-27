@@ -3,6 +3,8 @@ name: "Code Scanning - Action"
 on:
   pull_request:
     branches: [main]
+  push:
+    branches: [main]
 
 jobs:
   CodeQL-Build:
@@ -14,12 +16,28 @@ jobs:
       actions: read
       contents: read
 
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript', 'python', 'java' ]
+        # Puedes añadir más lenguajes según sea necesario.
+        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v1
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
 
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v1
+      # Autobuild attempts to build any compiled languages (Java, C/C++, C#).
+      # If this step fails, then you should remove it and run the build manually (see below)
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v2
+
+      # Uncomment the following lines to manually build your code if Autobuild fails
+      # - run: |
+      #   ./configure
+      #   make
